@@ -3,9 +3,11 @@ package com.mitocode.controller;
 import com.mitocode.dto.PatientDTO;
 import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
+import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,12 +21,15 @@ import java.util.List;
 public class PatientController {
 
     private final IPatientService service;
-    private final ModelMapper modelMapper;
+    /* @Qualifier("defaultMapper")
+    private final ModelMapper modelMapper; */
+    private final MapperUtil mapperUtil;
 
     @GetMapping
     public ResponseEntity<List<PatientDTO>> findAll(){
-        List<PatientDTO> list = service.findAll().stream().map(this::converToDto).toList();
-       return ResponseEntity.ok(list);
+        // List<PatientDTO> list = service.findAll().stream().map(this::converToDto).toList();
+       List<PatientDTO> list = mapperUtil.mapList(service.findAll(), PatientDTO.class);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
