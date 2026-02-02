@@ -1,7 +1,6 @@
 package com.mitocode.exception;
 
 import org.apache.coyote.Response;
-import org.jspecify.annotations.Nullable;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.*;
 import org.springframework.web.ErrorResponse;

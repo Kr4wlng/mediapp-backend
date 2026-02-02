@@ -5,7 +5,6 @@ import com.mitocode.repo.IGenericRepo;
 import com.mitocode.service.ICRUD;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class CRUDImpl<T, ID> implements ICRUD<T, ID> {
 

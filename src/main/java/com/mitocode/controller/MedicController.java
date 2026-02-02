@@ -3,6 +3,7 @@ package com.mitocode.controller;
 import com.mitocode.dto.MedicDTO;
 import com.mitocode.model.Medic;
 import com.mitocode.service.IMedicService;
+import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,24 +21,25 @@ import java.util.List;
 public class MedicController {
 
     private final IMedicService service;
-    @Qualifier("medicMapper")
-    private final ModelMapper modelMapper;
+    /* @Qualifier("medicMapper")
+    private final ModelMapper modelMapper; */
+    private final MapperUtil mapperUtil;
 
     @GetMapping
     public ResponseEntity<List<MedicDTO>> findAll(){
-        List<MedicDTO> list = service.findAll().stream().map(this::converToDto).toList();
+        List<MedicDTO> list = mapperUtil.mapList(service.findAll(), MedicDTO.class, "medicMapper");
        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MedicDTO> findById(@PathVariable("id") Integer id){
         Medic obj = service.findById(id);
-        return ResponseEntity.ok(converToDto(obj));
+        return ResponseEntity.ok(mapperUtil.map(obj, MedicDTO.class, "medicMapper"));
     }
 
     @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody MedicDTO dto){
-        Medic obj = service.save(converToEntity(dto));
+        Medic obj = service.save(mapperUtil.map(dto, Medic.class, "medicMapper"));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMedic()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -45,8 +47,8 @@ public class MedicController {
     @PutMapping("/{id}")
     public ResponseEntity<MedicDTO> update(@Valid @PathVariable("id") Integer id, @RequestBody MedicDTO dto){
         dto.setIdMedic(id);
-        Medic obj = service.update(id, converToEntity(dto));
-        return ResponseEntity.ok(converToDto(obj));
+        Medic obj = service.update(id, mapperUtil.map(dto, Medic.class, "medicMapper"));
+        return ResponseEntity.ok(mapperUtil.map(obj, MedicDTO.class, "medicMapper"));
     }
 
     @DeleteMapping("/{id}")
@@ -55,12 +57,12 @@ public class MedicController {
         return ResponseEntity.noContent().build();
     }
 
-    private MedicDTO converToDto(Medic obj){
+    /* private MedicDTO converToDto(Medic obj){
         return modelMapper.map(obj, MedicDTO.class);
     }
 
     private Medic converToEntity(MedicDTO dto){
         return modelMapper.map(dto, Medic.class);
-    }
+    } */
 
 }

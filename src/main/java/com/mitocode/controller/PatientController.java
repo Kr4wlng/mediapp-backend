@@ -6,11 +6,13 @@ import com.mitocode.service.IPatientService;
 import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.util.List;
@@ -35,12 +37,12 @@ public class PatientController {
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id){
         Patient obj = service.findById(id);
-        return ResponseEntity.ok(converToDto(obj));
+        return ResponseEntity.ok(mapperUtil.map(obj, PatientDTO.class));
     }
 
     @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody PatientDTO dto){
-        Patient obj = service.save(converToEntity(dto));
+        Patient obj = service.save(mapperUtil.map(dto, Patient.class));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -48,8 +50,8 @@ public class PatientController {
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> update(@Valid @PathVariable("id") Integer id, @RequestBody PatientDTO dto){
         dto.setIdPatient(id);
-        Patient obj = service.update(id, converToEntity(dto));
-        return ResponseEntity.ok(converToDto(obj));
+        Patient obj = service.update(id, mapperUtil.map(dto, Patient.class));
+        return ResponseEntity.ok(mapperUtil.map(obj, PatientDTO.class));
     }
 
     @DeleteMapping("/{id}")
@@ -58,12 +60,22 @@ public class PatientController {
         return ResponseEntity.noContent().build();
     }
 
-    private PatientDTO converToDto(Patient obj){
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<PatientDTO> findByIdHateoas(@PathVariable("id") Integer id){
+        EntityModel<PatientDTO> resource = EntityModel.of(mapperUtil.map(service.findById(id), PatientDTO.class));
+
+        // Generar link information
+        WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
+        resource.add(link1.withRel("patient-self-info"));
+        return resource;
+    }
+
+    /* private PatientDTO converToDto(Patient obj){
         return modelMapper.map(obj, PatientDTO.class);
     }
 
     private Patient converToEntity(PatientDTO dto){
         return modelMapper.map(dto, Patient.class);
-    }
+    } */
 
 }

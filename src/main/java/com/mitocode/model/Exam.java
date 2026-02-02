@@ -19,7 +19,7 @@ public class Exam {
     private Integer idExam;
 
     @Column(nullable = false, length = 50)
-    private Integer name;
+    private String name;
 
     @Column(nullable = false, length = 150)
     private String description;

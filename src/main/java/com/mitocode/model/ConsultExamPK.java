@@ -3,7 +3,6 @@ package com.mitocode.model;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jdk.jfr.Enabled;
 import lombok.EqualsAndHashCode;
 
 @Embeddable

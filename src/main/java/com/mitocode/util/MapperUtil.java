@@ -1,10 +1,9 @@
 package com.mitocode.util;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.core.ApplicationContext;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -21,6 +20,11 @@ public class MapperUtil {
                 .stream()
                 .map(element -> modelMapper.map(element, targetClass))
                 .toList();
+    }
+
+    public <S, T> T map(S source, Class<T> targetClass, String... mapperQualifier) {
+        ModelMapper modelMapper = getModelMapper(mapperQualifier);
+        return modelMapper.map(source, targetClass);
     }
 
     private ModelMapper getModelMapper(String... mapperQualifier) {

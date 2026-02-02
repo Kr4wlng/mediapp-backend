@@ -3,6 +3,7 @@ package com.mitocode.controller;
 import com.mitocode.dto.SpecialtyDTO;
 import com.mitocode.model.Specialty;
 import com.mitocode.service.ISpecialtyService;
+import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,24 +21,25 @@ import java.util.List;
 public class SpecialtyController {
 
     private final ISpecialtyService service;
-    @Qualifier("defaultMapper")
-    private final ModelMapper modelMapper;
+    /* @Qualifier("defaultMapper")
+    private final ModelMapper modelMapper; */
+    private final MapperUtil mapperUtil;
 
     @GetMapping
     public ResponseEntity<List<SpecialtyDTO>> findAll(){
-        List<SpecialtyDTO> list = service.findAll().stream().map(this::converToDto).toList();
+        List<SpecialtyDTO> list = mapperUtil.mapList(service.findAll(), SpecialtyDTO.class);
        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SpecialtyDTO> findById(@PathVariable("id") Integer id){
         Specialty obj = service.findById(id);
-        return ResponseEntity.ok(converToDto(obj));
+        return ResponseEntity.ok(mapperUtil.map(obj, SpecialtyDTO.class));
     }
 
     @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody SpecialtyDTO dto){
-        Specialty obj = service.save(converToEntity(dto));
+        Specialty obj = service.save(mapperUtil.map(dto, Specialty.class));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdSpecialty()).toUri();
         return ResponseEntity.created(location).build();
     }
@@ -45,8 +47,8 @@ public class SpecialtyController {
     @PutMapping("/{id}")
     public ResponseEntity<SpecialtyDTO> update(@Valid @PathVariable("id") Integer id, @RequestBody SpecialtyDTO dto){
         dto.setIdSpecialty(id);
-        Specialty obj = service.update(id, converToEntity(dto));
-        return ResponseEntity.ok(converToDto(obj));
+        Specialty obj = service.update(id, mapperUtil.map(dto, Specialty.class));
+        return ResponseEntity.ok(mapperUtil.map(obj, SpecialtyDTO.class));
     }
 
     @DeleteMapping("/{id}")
@@ -55,12 +57,12 @@ public class SpecialtyController {
         return ResponseEntity.noContent().build();
     }
 
-    private SpecialtyDTO converToDto(Specialty obj){
+    /* private SpecialtyDTO converToDto(Specialty obj){
         return modelMapper.map(obj, SpecialtyDTO.class);
     }
 
     private Specialty converToEntity(SpecialtyDTO dto){
         return modelMapper.map(dto, Specialty.class);
-    }
+    } */
 
 }
