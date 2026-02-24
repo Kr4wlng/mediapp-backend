@@ -26,7 +26,7 @@ public class Patient {
     private String dni;
 
     @Column(length = 150)
-    private String addres;
+    private String address;
 
     @Column(nullable = false, length = 9)
     private String phone;

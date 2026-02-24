@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/patients")
 @RequiredArgsConstructor
+// @CrossOrigin(origins = "*")
 public class PatientController {
 
     private final IPatientService service;
