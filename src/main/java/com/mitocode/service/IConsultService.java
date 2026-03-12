@@ -1,6 +1,7 @@
 package com.mitocode.service;
 
 import com.mitocode.dto.ConsultProcDTO;
+import com.mitocode.dto.IConsultProcDTO;
 import com.mitocode.model.Consult;
 import com.mitocode.model.Exam;
 import org.springframework.cglib.core.Local;
@@ -14,5 +15,6 @@ public interface IConsultService extends ICRUD<Consult, Integer>{
     List<Consult> search(String dni, String fullname);
     List<Consult> searchByDates(LocalDateTime date1, LocalDateTime date2);
     List<ConsultProcDTO> callProcedureOrFunctionNative();
+    List<IConsultProcDTO> callProcedureOrFunctionProjection();
 
 }

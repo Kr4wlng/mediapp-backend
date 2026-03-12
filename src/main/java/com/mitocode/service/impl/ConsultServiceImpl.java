@@ -1,6 +1,7 @@
 package com.mitocode.service.impl;
 
 import com.mitocode.dto.ConsultProcDTO;
+import com.mitocode.dto.IConsultProcDTO;
 import com.mitocode.model.Consult;
 import com.mitocode.model.Exam;
 import com.mitocode.repo.IConsultExamRepo;
@@ -59,5 +60,10 @@ public class ConsultServiceImpl extends CRUDImpl<Consult, Integer> implements IC
         });
 
         return list;
+    }
+
+    @Override
+    public List<IConsultProcDTO> callProcedureOrFunctionProjection() {
+        return consultRepo.callProcedureOrFunctionProjection();
     }
 }
