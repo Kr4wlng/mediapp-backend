@@ -66,4 +66,10 @@ public class ConsultServiceImpl extends CRUDImpl<Consult, Integer> implements IC
     public List<IConsultProcDTO> callProcedureOrFunctionProjection() {
         return consultRepo.callProcedureOrFunctionProjection();
     }
+
+    @Override
+    public byte[] generateReport() throws Exception {
+        // IMPLEMENTACION DE JASPER REPORTS
+        return new byte[0];
+    }
 }
