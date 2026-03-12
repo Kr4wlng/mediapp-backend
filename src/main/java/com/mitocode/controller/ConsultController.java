@@ -2,6 +2,7 @@ package com.mitocode.controller;
 
 import com.mitocode.dto.ConsultDTO;
 import com.mitocode.dto.ConsultListExamDTO;
+import com.mitocode.dto.ConsultProcDTO;
 import com.mitocode.dto.FilterConsultDTO;
 import com.mitocode.model.Consult;
 import com.mitocode.model.Exam;
@@ -9,6 +10,7 @@ import com.mitocode.service.IConsultService;
 import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -76,6 +78,11 @@ public class ConsultController {
         List<ConsultDTO> listDTO = mapperUtil.mapList(list, ConsultDTO.class, "consultMapper");
 
         return ResponseEntity.ok(listDTO);
+    }
+
+    @GetMapping("/callProcedureNative")
+    public ResponseEntity<List<ConsultProcDTO>> callProcedureNative(){
+        return ResponseEntity.ok(service.callProcedureOrFunctionNative());
     }
 
 }
