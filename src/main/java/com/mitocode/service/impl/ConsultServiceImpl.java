@@ -9,12 +9,20 @@ import com.mitocode.repo.IGenericRepo;
 import com.mitocode.repo.IConsultRepo;
 import com.mitocode.service.IConsultService;
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +77,15 @@ public class ConsultServiceImpl extends CRUDImpl<Consult, Integer> implements IC
 
     @Override
     public byte[] generateReport() throws Exception {
-        // IMPLEMENTACION DE JASPER REPORTS
-        return new byte[0];
+        byte[] data = null;
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("txt_title", "MEDIAPP REPORT");
+
+        File fie = new ClassPathResource("/reports/consultas.jasper").getFile();
+        JasperPrint print = JasperFillManager.fillReport(fie.getPath(), parameters, new JRBeanCollectionDataSource(callProcedureOrFunctionNative()));
+        data = JasperExportManager.exportReportToPdf(print);
+
+        return data;
     }
 }

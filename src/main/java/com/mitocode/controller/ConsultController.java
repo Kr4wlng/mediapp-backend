@@ -8,6 +8,7 @@ import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -85,6 +86,13 @@ public class ConsultController {
     @GetMapping("/callProcedureProjection")
     public ResponseEntity<List<IConsultProcDTO>> callProcedureProjection(){
         return ResponseEntity.ok(service.callProcedureOrFunctionProjection());
+    }
+
+    @GetMapping(value = "/generateReport", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> generateReport() throws Exception {
+        byte[] data = service.generateReport();
+
+        return ResponseEntity.ok(data);
     }
 
 }
