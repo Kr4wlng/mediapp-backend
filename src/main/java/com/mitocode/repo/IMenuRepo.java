@@ -15,6 +15,6 @@ public interface IMenuRepo extends IGenericRepo<Menu, Integer>{
             inner join user_data u on u.id_user = ur.id_user
             where u.username = :username
         """, nativeQuery = true)
-    List<Menu> getMenuByUsername(@Param("username") String username);
+    List<Menu> getMenusByUsername(@Param("username") String username);
 
 }

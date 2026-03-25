@@ -11,7 +11,7 @@ public class MenuDTO {
 
     private Integer idMenu;
     private String icon;
-    private String user;
+    private String name;
     private String url;
 
 }
