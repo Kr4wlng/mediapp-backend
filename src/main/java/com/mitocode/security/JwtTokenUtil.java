@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,8 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil implements Serializable {
 
-    private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000;
+    private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; // 05 horas
+    // private final long JWT_TOKEN_VALIDITY = 6000; // 06 segundos
 
     @Value("${jwt.secret}")
     private String secret;
@@ -29,7 +29,7 @@ public class JwtTokenUtil implements Serializable {
     // Agregando data al payload
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")));
+        claims.put("role", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","))); // ADMINS, USER, DBA
         claims.put("test", "mitocode-value-test");
 
         return doGenerateToken(claims, userDetails.getUsername());
@@ -48,14 +48,14 @@ public class JwtTokenUtil implements Serializable {
     }
 
     // utils
-    public Claims getAllClaimsForToken(String token){
+    public Claims getAllClaimsFromToken(String token){
         SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
 
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver){
-        final Claims claims = getAllClaimsForToken(token);
+        final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
