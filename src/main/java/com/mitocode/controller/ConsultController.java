@@ -136,12 +136,12 @@ public class ConsultController {
         return ResponseEntity.ok().build();
     }
 
-    private File convertToFile(MultipartFile multipartFile) throws Exception {
+    /* private File convertToFile(MultipartFile multipartFile) throws Exception {
         File file = new File(multipartFile.getOriginalFilename());
         FileOutputStream outputStream = new FileOutputStream(file);
         outputStream.write(multipartFile.getBytes());
         outputStream.close();
         return file;
-    }
+    } */
 
 }

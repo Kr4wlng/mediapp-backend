@@ -6,6 +6,8 @@ import com.mitocode.service.IExamService;
 import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -51,6 +53,12 @@ public class ExamController {
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<Page<ExamDTO>> listPage(Pageable pageable){
+        Page<ExamDTO> page = service.listPage(pageable).map(e -> mapperUtil.map(e, ExamDTO.class));
+        return ResponseEntity.ok(page);
     }
 
 }

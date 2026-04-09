@@ -15,7 +15,7 @@ public class AuthorizeLogic {
         boolean result = false;
 
         String methodRole = switch (path){
-            case "findAll" -> "ADMIN";
+            case "findAll" -> "ADMIN,USER";
             case "findById", "getById" -> "USER,DBA";
             default -> "ROOT";
         };
@@ -29,8 +29,8 @@ public class AuthorizeLogic {
             String roleUser = grantedAuthority.getAuthority();
             log.info("Role is: " + roleUser);
 
-            for (String roe : methodRoles){
-                if (roleUser.equalsIgnoreCase(roe)){
+            for (String role : methodRoles){
+                if (roleUser.equalsIgnoreCase(role)){
                     result = true;
                     break;
                 }
