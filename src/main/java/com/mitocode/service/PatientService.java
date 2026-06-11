@@ -14,6 +14,7 @@ public class PatientService {
     private final PatientRepo repo;
 
     public Patient validAndSave(Patient patient){
+        // repo = new PatientRepo();
         if(patient.getIdPatient() == 0){
             return repo.save(patient);
         }else{

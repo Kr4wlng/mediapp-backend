@@ -19,8 +19,13 @@ public class PatientController {
     private final PatientService service;
     private String text;
 
+    /* public PatientController(PatientService service) {
+        this.service = service;
+    } */
+
     @GetMapping
     public Patient savePatient(){
+        // service = new PatientService();
         return service.validAndSave(new Patient(1, "Axl", "Durand"));
     }
 
