@@ -11,12 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Patient {
+public class Medic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Integer idPatient;
+    private Integer idMedic;
+
+    @ManyToOne
+    @JoinColumn(name = "id_specialty", nullable = false, foreignKey = @ForeignKey(name = "FK_MEDIC_SPECIALTY"))
+    private Specialty specialty;
 
     @Column(nullable = false, length = 70)
     private String firstName;
@@ -24,16 +28,10 @@ public class Patient {
     @Column(nullable = false, length = 70)
     private String lastName;
 
-    @Column(nullable = false, length = 8)
-    private String dni;
+    @Column(nullable = false, length = 12)
+    private String cmp;
 
-    @Column(length = 150)
-    private String addres;
-
-    @Column(nullable = false, length = 9)
-    private String phone;
-
-    @Column(nullable = false, length = 55)
-    private String email;
+    @Column(length = 250)
+    private String photoUrl;
 
 }

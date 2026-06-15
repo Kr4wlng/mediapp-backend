@@ -1,32 +1,53 @@
 package com.mitocode.controller;
 
 import com.mitocode.model.Patient;
-import com.mitocode.service.PatientService;
-import lombok.AllArgsConstructor;
+import com.mitocode.service.IPatientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/patients")
-// @AllArgsConstructor
 @RequiredArgsConstructor
 public class PatientController {
 
-    // @Autowired
-    private final PatientService service;
-    private String text;
-
-    /* public PatientController(PatientService service) {
-        this.service = service;
-    } */
+    private final IPatientService service;
 
     @GetMapping
-    public Patient savePatient(){
-        // service = new PatientService();
-        return service.validAndSave(new Patient(1, "Axl", "Durand"));
+    public ResponseEntity<List<Patient>> findAll(){
+        List<Patient> list = service.findAll();
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Patient> findById(@PathVariable("id") Integer id){
+        Patient obj = service.findById(id);
+        return ResponseEntity.ok(obj);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody Patient patient){
+        Patient obj = service.save(patient);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient()).toUri();
+        return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id{")
+    public ResponseEntity<Patient> update(@PathVariable Integer id, @RequestBody Patient patient){
+        patient.setIdPatient(id);
+        Patient obj = service.update(id, patient);
+        return ResponseEntity.ok(obj);
+    }
+
+    @DeleteMapping("/{id{")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
