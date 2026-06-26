@@ -1,9 +1,11 @@
 package com.mitocode.controller;
 
+import com.mitocode.dto.PatientDTO;
 import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,37 +19,46 @@ import java.util.List;
 public class PatientController {
 
     private final IPatientService service;
+    private final ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<Patient>> findAll(){
-        List<Patient> list = service.findAll();
+    public ResponseEntity<List<PatientDTO>> findAll(){
+        List<PatientDTO> list = service.findAll().stream().map(this::converToDto).toList();
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> findById(@PathVariable("id") Integer id){
+    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id){
         Patient obj = service.findById(id);
-        return ResponseEntity.ok(obj);
+        return ResponseEntity.ok(converToDto(obj));
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody Patient patient){
-        Patient obj = service.save(patient);
+    public ResponseEntity<Void> save(@RequestBody PatientDTO dto){
+        Patient obj = service.save(converToEntity(dto));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient()).toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{id{")
-    public ResponseEntity<Patient> update(@PathVariable Integer id, @RequestBody Patient patient){
-        patient.setIdPatient(id);
-        Patient obj = service.update(id, patient);
-        return ResponseEntity.ok(obj);
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientDTO> update(@PathVariable Integer id, @RequestBody PatientDTO dto){
+        dto.setIdPatient(id);
+        Patient obj = service.update(id, converToEntity(dto));
+        return ResponseEntity.ok(converToDto(obj));
     }
 
-    @DeleteMapping("/{id{")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private PatientDTO converToDto(Patient obj){
+        return modelMapper.map(obj, PatientDTO.class);
+    }
+
+    private Patient converToEntity(PatientDTO dto){
+        return modelMapper.map(dto, Patient.class);
     }
 
 }
