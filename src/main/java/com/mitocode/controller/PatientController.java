@@ -3,6 +3,7 @@ package com.mitocode.controller;
 import com.mitocode.dto.PatientDTO;
 import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
@@ -34,14 +35,14 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody PatientDTO dto){
+    public ResponseEntity<Void> save(@Valid @RequestBody PatientDTO dto){
         Patient obj = service.save(converToEntity(dto));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdPatient()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> update(@PathVariable Integer id, @RequestBody PatientDTO dto){
+    public ResponseEntity<PatientDTO> update(@Valid @PathVariable Integer id, @RequestBody PatientDTO dto){
         dto.setIdPatient(id);
         Patient obj = service.update(id, converToEntity(dto));
         return ResponseEntity.ok(converToDto(obj));
