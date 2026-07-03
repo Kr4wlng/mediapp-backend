@@ -21,6 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/patients")
 @RequiredArgsConstructor
+// @CrossOrigin(origins = "*")
 public class PatientController {
 
     private final IPatientService service;
